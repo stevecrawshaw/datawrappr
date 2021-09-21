@@ -2,7 +2,7 @@ packages <- c("config", "fastverse", "tidyverse", "here", "janitor", "httr", "js
 library(xfun)
 pkg_attach2(packages)
 # devtools::install_github("munichrocker/DatawRappr")
-library(DatawRappr)
+# library(DatawRappr)
 
 apikey <- get(file = "credentials/config.yml",
               config = "default",
