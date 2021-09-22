@@ -2,14 +2,15 @@ source("00_setup.R")
 #https://developer.datawrapper.de/docs/creating-a-locator-map
 map_url <- "https://api.datawrapper.de/v3/charts"
 
-r_map <- POST(map_url, headers_auth, headers_content,
-              body = list(
-                title = "My Locator Map",
-                type = "locator-map"
-              ),
-              encode = "json")
-
-(map_id <- r_map %>% get_id())
+# r_map <- POST(map_url, headers_auth, headers_content,
+#               body = list(
+#                 title = "My Locator Map",
+#                 type = "locator-map"
+#               ),
+#               encode = "json")
+# 
+# (map_id <- r_map %>% get_id())
+map_id <- "9AGV0"
 # send the specs for the map to the created object
 # they are in a json file
 created_map_url <- glue("{map_url}/{map_id}")
@@ -69,6 +70,10 @@ PATCH(created_map_url,
      }
   }',
   encode = "json")
+# OR using file
+PATCH(created_map_url,
+      headers_auth, headers_content,
+      body = upload_file(path = "data/map.json"))
 
 # check
 
@@ -86,6 +91,7 @@ path_icon <- r_map_patched %>%
   filter(id == "locator") %>% 
   pull(path)
 
+
 # publish
 
 map_pub_url <- glue("{created_map_url}/publish")
@@ -98,6 +104,27 @@ map_data_url <- glue("{created_map_url}/data")
 r_map_data <- GET(map_data_url,
                   headers_auth, headers_content)
 
+# PUT new markers
+
+# PUT(map_data_url, headers_auth,
+#     body = upload_file("data/markers.json"))
+
 r_map_data %>% 
   response_as_tbl() %>% 
-  view()
+  filter(str_detect(name, "markers.icon|markers.title")) %>% 
+  # mutate(id = str_sub(name, start = -1L, end = -1L)) %>% 
+  separate(col = name, into = c("marker", "type", "id"), extra = "drop") %>% 
+  select(-marker) %>% 
+ write_csv2(file = "data/icon_svg_paths.csv")
+
+
+%>% 
+  pivot_wider( names_from = id, values_from = value) %>% 
+  mutate(icon_data = coalesce(`1`, `2`, `3`, `4`, `5`, `6`))
+
+%>% 
+   %>% 
+  set_names(nm = janitor::make_clean_names(names(.))) %>% 
+  coalesce(x1, x2, x3, x4, x5, x6)
+
+

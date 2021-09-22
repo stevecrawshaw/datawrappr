@@ -1,0 +1,62 @@
+{
+  "markers": [
+    {
+      "type": "point",
+      "title": "BRISTOL",
+      "icon": {
+        "path": "M1000 350a500 500 0 0 0-500-500 500 500 0 0 0-500 500 500 500 0 0 0 500 500 500 500 0 0 0 500-500z",
+        "height": 700,
+        "width": 1000
+      },
+      "scale": 1,
+      "markerColor": "#cc0000",
+      "anchor": "bottom-right",
+      "offsetY": 0,
+      "offsetX": 0,
+      "text": {
+        "color": "#333333",
+        "fontSize": 15,
+        "halo": "#f2f3f0"
+      },
+      "rotate": 0,
+      "visible": true,
+      "visibility": {
+        "mobile": true,
+        "desktop": true
+      },
+      "coordinates": [
+        -2.6,
+        51.45
+      ]
+    },
+    {
+      "type": "point",
+      "title": "BRISTOL2",
+      "icon": {
+        "path": "M1000 350a500 500 0 0 0-500-500 500 500 0 0 0-500 500 500 500 0 0 0 500 500 500 500 0 0 0 500-500z",
+        "height": 700,
+        "width": 1000
+      },
+      "scale": 1,
+      "markerColor": "#cc0099",
+      "anchor": "bottom-right",
+      "offsetY": 0,
+      "offsetX": 0,
+      "text": {
+        "color": "#333333",
+        "fontSize": 15,
+        "halo": "#f2f3f0"
+      },
+      "rotate": 0,
+      "visible": true,
+      "visibility": {
+        "mobile": true,
+        "desktop": true
+      },
+      "coordinates": [
+        -2.605,
+        51.4505
+      ]
+    }
+  ]
+}
