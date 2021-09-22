@@ -77,12 +77,27 @@ r_map_patched <- GET(created_map_url, headers_auth)
 r_map_patched %>% 
   response_as_tbl() %>% view()
 
+# to get the "path" for the SVG icon so you can define it elsewhere
 path_icon <- r_map_patched %>% 
   content(as = "text") %>%
   fromJSON() %>% 
-  pluck("metadata", "visualize", "key", "items", "icon", "path")
+  pluck("metadata", "visualize", "key", "items", "icon") %>%
+  # icon is a df
+  filter(id == "locator") %>% 
+  pull(path)
 
 # publish
 
 map_pub_url <- glue("{created_map_url}/publish")
 POST(map_pub_url, headers_auth)
+
+# look at the data
+
+map_data_url <- glue("{created_map_url}/data")
+
+r_map_data <- GET(map_data_url,
+                  headers_auth, headers_content)
+
+r_map_data %>% 
+  response_as_tbl() %>% 
+  view()
