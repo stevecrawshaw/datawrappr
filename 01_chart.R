@@ -32,9 +32,9 @@ unlist() %>%
   
 # Data ----
 path = "C:/Users/User/Documents/R Projects/R Projects/datawrappr/data/no2-diffusion-tube-data.csv"
-created_chart_url <- glue("https://api.datawrapper.de/v3/charts/{chart_id}/data")
+created_chart_data_url <- glue("https://api.datawrapper.de/v3/charts/{chart_id}/data")
 # put the data
-PUT(created_chart_url,
+PUT(created_chart_data_url,
     add_headers(.headers = c("Authorization" =  glue("Bearer {apikey}"),
                              "content-type" = "text/csv")),
     body = 'country;Share of population that lives in the capital;in other urban areas;in rural areas
@@ -52,18 +52,60 @@ USA (Washington, D.C.);1.54;79.9;18.6
 China (Beijing);1.4;53;45.6')
 
 # check with GET
-GET(created_chart_url,
-    add_headers(.headers = c("Authorization" =  glue("Bearer {apikey}"))))
 
 chart_settings_url <- glue("https://api.datawrapper.de/v3/charts/{chart_id}")
+
+GET(chart_settings_url,
+    add_headers(.headers = c("Authorization" =  glue("Bearer {apikey}"))))
 
 r_chart_settings <- GET(chart_settings_url,
                         add_headers(.headers = c("Authorization" =  glue("Bearer {apikey}"))))
 
-w <- r_chart_settings %>% 
+r_chart_settings %>% 
   content(as = "text") %>% 
   fromJSON() %>%
   unlist() %>% 
   enframe() %>% 
-  flatten()
+  # flatten()
   view()
+
+# change some metadata
+
+
+
+PATCH(url = chart_settings_url,
+      headers_auth, headers_content, headers_accept,
+      body = '{
+        "metadata": {
+          "describe": {
+              "source-name": "UN Population Division",
+              "source-url": "https://population.un.org/wup/",
+              "intro": "Share of population that lives in the capital, in urban areas and in rural areas, of selected countries, 2014.",
+              "byline": "Lisa Charlotte Rost, Datawrapper"
+          }
+        }
+    }',
+    encode = "raw"
+      )
+# change colours
+
+PATCH(url = chart_settings_url,
+      headers_auth, headers_content, headers_accept,
+      body = '{
+        "metadata": {
+          "visualize": {
+            "thick": true,
+            "custom-colors": {
+              "in rural areas": "#dadada",
+              "in other urban areas": "#1d81a2",
+              "Share of population that lives in the capital": "#15607a"
+                         }
+            }
+        }
+    }',
+    encode = "raw"
+)
+
+# publish chart
+chart_publish_url <- glue("https://api.datawrapper.de/charts/{chart_id}/publish")
+POST(chart_publish_url, headers_auth)
